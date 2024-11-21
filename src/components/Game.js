@@ -118,7 +118,7 @@ const Game = () => {
       </div>
       
       <div className={`hand ${
-        gameOver
+        gameOver && playerScore > 0
           ? (playerScore > dealerScore && playerScore <= 21) || dealerScore > 21
             ? 'winning-hand'
             : playerScore === dealerScore
