@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Deck from './Deck';
+import Card from './Card';
 
 const Game = () => {
   const [playerHand, setPlayerHand] = useState([]);
@@ -118,7 +119,7 @@ const Game = () => {
       </div>
       
       <div className={`hand ${
-        gameOver && playerScore > 0
+        gameOver && playerHand.length > 0
           ? (playerScore > dealerScore && playerScore <= 21) || dealerScore > 21
             ? 'winning-hand'
             : playerScore === dealerScore
@@ -128,18 +129,18 @@ const Game = () => {
       }`}>
         <h2>Your Hand ({playerScore})</h2>
         {playerHand.map((card, index) => (
-          <div key={index} className="card">
-            {card.rank} of {card.suit}
-          </div>
+          <Card key={index} rank={card.rank} suit={card.suit} />
         ))}
       </div>
       
       <div className="hand">
         <h2>Dealer's Hand ({dealerScore})</h2>
         {dealerHand.map((card, index) => (
-          <div key={index} className="card">
-            {gameOver || index === 0 ? `${card.rank} of ${card.suit}` : 'Hidden'}
-          </div>
+          <Card 
+            key={index} 
+            rank={gameOver || index === 0 ? card.rank : 'Hidden'} 
+            suit={gameOver || index === 0 ? card.suit : 'Hidden'} 
+          />
         ))}
       </div>
       
