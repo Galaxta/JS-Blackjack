@@ -72,6 +72,7 @@ wss.on('connection', (ws, req) => {
 
 // Regular cleanup and status updates
 setInterval(() => {
-    console.log(`Current active players: ${players.size}`);
-    console.log('Player IPs:', Array.from(players.values()).map(p => p.ip));
-}, 10000);
+    process.stdout.clearLine(0);
+    process.stdout.cursorTo(0);
+    process.stdout.write(`Current active players: ${players.size} | IPs: ${Array.from(players.values()).map(p => p.ip).join(', ')}`);
+}, 30000);
