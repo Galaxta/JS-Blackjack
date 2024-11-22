@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Deck from './Deck';
 import Card from './Card';
 
@@ -11,6 +11,18 @@ const Game = () => {
   const [wins, setWins] = useState(0);
   const [currentStreak, setCurrentStreak] = useState(0);
   const [totalGames, setTotalGames] = useState(0);
+  const playerId = localStorage.getItem('playerId') || crypto.randomUUID();
+  localStorage.setItem('playerId', playerId);
+
+  useEffect(() => {
+    const socket = new WebSocket(`ws://${window.location.hostname}:8080`);
+    
+    socket.addEventListener('open', () => {
+      console.log('Connected to game server');
+    });
+
+    return () => socket.close();
+  }, []);
 
   const startGame = () => {
     const newDeck = new Deck();
@@ -146,7 +158,7 @@ const Game = () => {
       
       {message && (
         <h3 className={`message ${
-          message.startsWith('You win') || message.includes('Dealer busts')
+          message.includes('You win') || message.includes('Dealer busts')
             ? 'win'
             : message.includes('Push')
             ? 'tie'
