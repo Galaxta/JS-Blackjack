@@ -253,4 +253,12 @@ body {
     background: linear-gradient(135deg, rgba(241, 196, 15, 0.8), rgba(243, 156, 18, 0.8));
     box-shadow: 0 0 30px rgba(241, 196, 15, 0.5);
   }
+
+  .soft-indicator {
+    font-size: 0.8em;
+    color: #2196f3;
+    margin-left: 8px;
+    font-style: italic;
+  }
+  
   
