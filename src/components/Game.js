@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
 import Deck from './Deck';
 import Card from './Card';
 
@@ -13,30 +12,19 @@ const Game = () => {
   const [currentStreak, setCurrentStreak] = useState(0);
   const [totalGames, setTotalGames] = useState(0);
 
-  useEffect(() => {
-    const handleKeyPress = (e) => {
-      if (gameOver) return;
-      if (e.code === 'Space') hit();
-      if (e.code === 'Enter') stand();
-    };
-
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [gameOver]);
-
   const startGame = () => {
-    setMessage('Shuffling...');
-    setTimeout(() => {
-      const newDeck = new Deck();
-      const playerCards = [newDeck.drawCard(), newDeck.drawCard()];
-      const dealerCards = [newDeck.drawCard(), newDeck.drawCard()];
-      
-      setDeck(newDeck);
-      setPlayerHand(playerCards);
-      setDealerHand(dealerCards);
-      setMessage('');
-      setGameOver(false);
-    }, 800);
+    const newDeck = new Deck();
+    const playerCards = [newDeck.drawCard(), newDeck.drawCard()];
+    const dealerCards = [newDeck.drawCard(), newDeck.drawCard()];
+    
+    console.log('Player Cards:', JSON.stringify(playerCards, null, 2));
+    console.log('Dealer Cards:', JSON.stringify(dealerCards, null, 2));
+    
+    setDeck(newDeck);
+    setPlayerHand(playerCards);
+    setDealerHand(dealerCards);
+    setMessage('');
+    setGameOver(false);
   };
 
   const calculateScore = (hand) => {
@@ -50,12 +38,6 @@ const Game = () => {
       }
     }
     return score;
-  };
-
-  const isSoftHand = (hand) => {
-    return hand.some(card => card.rank === 'Ace') && 
-           calculateScore(hand) <= 21 &&
-           calculateScore(hand.filter(card => card.rank !== 'Ace')) + 11 <= 21;
   };
 
   const hit = () => {
@@ -148,33 +130,20 @@ const Game = () => {
             : 'losing-hand'
           : ''
       }`}>
-        <h2>Your Hand ({playerScore}) {isSoftHand(playerHand) && <span className="soft-indicator">Soft</span>}</h2>
+        <h2>Your Hand ({playerScore})</h2>
         {playerHand.map((card, index) => (
-          <motion.div
-            key={index}
-            initial={{ scale: 0.5, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Card rank={card.rank} suit={card.suit} />
-          </motion.div>
+          <Card key={index} rank={card.rank} suit={card.suit} />
         ))}
       </div>
       
       <div className="hand">
         <h2>Dealer's Hand ({dealerScore})</h2>
         {dealerHand.map((card, index) => (
-          <motion.div
-            key={index}
-            initial={{ scale: 0.5, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Card 
-              rank={gameOver || index === 0 ? card.rank : 'Hidden'} 
-              suit={gameOver || index === 0 ? card.suit : 'Hidden'} 
-            />
-          </motion.div>
+          <Card 
+            key={index} 
+            rank={gameOver || index === 0 ? card.rank : 'Hidden'} 
+            suit={gameOver || index === 0 ? card.suit : 'Hidden'} 
+          />
         ))}
       </div>
       
